@@ -86,124 +86,14 @@ qiime tools export --input-path silva-taxonomy.qza --output-path .
 
 qiime tools export --input-path rooted-tree.qza --output-path .
 
-## Phyloseq R
-library("phyloseq")
-
-library("ggplot2")
-
-library("readxl")
-
-library("plyr")
-
-library("dplyr")
-
-library("tibble")
-
-library("microbiomeSeq")
-
-library("vegan")
-
-library("ape")
-
-library("dunn.test")
-
-dir()
-
-otu_table <- read.table("rarefied-feature-table.tsv",
-
-sep = "\t", header = TRUE, row.names = 1)
-
-class(otu_table)
-
-head(otu_table)
-
-otu_table <- as.matrix(otu_table)
-
-class(otu_table)
-
-taxa <- read.table("silva-taxonomy.tsv",
-
-sep = "\t", header = TRUE, row.names = 1)
-
-taxa <- as.matrix(taxa)
-
-head(taxa)
-
-class(taxa)
-
-metadata <- read.table("sample-metadata.tsv",
-
-sep = "\t", header = TRUE, row.names = 1)
-
-head(metadata)
-
-trefile = read.tree(file = "tree.nwk")
-
-print(trefile)
-
-OTU <- otu_table(otu_table, taxa_are_rows=TRUE)
-
-TAX = tax_table(taxa)
-
-sample = sample_data(metadata)
-
-phyloseq_obj <- phyloseq(OTU, TAX, sample)
-
-print(phyloseq_obj)
-
-plot_richness(phyloseq_obj, measures=c("Shannon", "simpson", "Observed" ),
-x="samples", color="Group", shape="Type")
-
-
-## Kruskal wallis test
-alpha_Supraglacial1 <- subset_samples(phyloseq_obj, Group=="Supraglacial-1")
-
-alpha_Supraglacial2 <- subset_samples(phyloseq_obj, Group=="Supraglacial-2")
-
-alpha_Proglacial3 <- subset_samples(phyloseq_obj, Group=="Proglacial-3")
-
-alpha_Proglacial4 <- subset_samples(phyloseq_obj, Group=="Proglacial-4")
-
-all_alpha <- merge_phyloseq(alpha_Supraglacial1, alpha_Supraglacial2,
-
-alpha_Proglacial3, alpha_Proglacial4 )
-
-all_alpha
-
-alpha_observed <- estimate_richness(all_alpha, measures = "Observed")
-
-alpha_Shannon <- estimate_richness(all_alpha, measures = "Shannon")
-
-alpha_simpson <- estimate_richness(all_alpha, measures = "simpson")
-
-alpha.stats <- cbind(alpha_observed, sample_data(all_alpha))
-
-kruskal.test(Observed~Group, alpha.stats)
-
-dunn.test(alpha.stats$Observed, alpha.stats$Group,
-
-method = "bonferroni")
-
-alpha.stats <- cbind(alpha_Shannon, sample_data(all_alpha))
-
-kruskal.test(Shannon~Group, alpha.stats)
-
-dunn.test(alpha.stats$Shannon, alpha.stats$Group,
-method = "bonferroni")
-
-alpha.stats <- cbind(alpha_simpson, sample_data(all_alpha))
-kruskal.test(Simpson~Group, alpha.stats)
-
-dunn.test(alpha.stats$simpson, alpha.stats$Group,
-method = "bonferroni")
 
 ## Running Metabolic tool
 ## The process of preprocessing, trimming, MAG generation and GTDB classification were done in the KBase server according to a previously described methodology (https://doi.org/10.1038/s41596-022-00747-x). The MAG sequences obtained from the KBase server were used for METABOLIC analysis.
 
 conda activate metabolic_v4.0
 
-perl ./METABOLIC-G.pl -in-gn ./bins -t 20 -o ./metabolic_G_out
-# ./bins contain the MAG sequence files
+perl ./METABOLIC-G.pl -in-gn ./Metagenome/bins -t 20 -o ./metabolic_G_out
+# ./Metagenome/bins contain the MAG sequence files
 
 ## Metagenome assembled genome (MAGs) phylogenetic tree
 conda activate gtdbtk-2.3.2
