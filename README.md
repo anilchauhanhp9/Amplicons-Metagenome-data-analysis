@@ -79,8 +79,11 @@ qiime taxa barplot \
 
 ## input for Phyloseq-R
 qiime tools export --input-path rarefied_table.qza --output-path .
+
 biom convert --to-tsv -i feature-table.biom -o rarefied-feature-table.tsv
+
 qiime tools export --input-path silva-taxonomy.qza --output-path .
+
 qiime tools export --input-path rooted-tree.qza --output-path .
 
 ## Phyloseq R
