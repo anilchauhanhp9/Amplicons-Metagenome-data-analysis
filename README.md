@@ -201,11 +201,14 @@ method = "bonferroni")
 ## The process of preprocessing, trimming, MAG generation and GTDB classification were done in the KBase server according to a previously described methodology (https://doi.org/10.1038/s41596-022-00747-x). The MAG sequences obtained from the KBase server were used for METABOLIC analysis.
 
 conda activate metabolic_v4.0
+
 perl ./METABOLIC-G.pl -in-gn ./bins -t 20 -o ./metabolic_G_out
 # ./bins contain the MAG sequence files
 
 ## Metagenome assembled genome (MAGs) phylogenetic tree
 conda activate gtdbtk-2.3.2
+
 gtdbtk identify --genome_dir [genomes] --out_dir [identify_output] --cpus 16
+
 gtdbtk align --identify_dir [identify_output] --out_dir [align_output] --cpus 16
 FastTree alignment.file 
